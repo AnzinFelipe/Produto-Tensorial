@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "matriz.h"
+#include "threads.h"
 
 int main( int argc, char *argv[]) {
     int cont;
@@ -26,6 +27,8 @@ int main( int argc, char *argv[]) {
 
         fclose(fp);
     }
+
+    calcular_tensorial_threads();
     calcular_tensorial(matrizes);
     liberar_matrizes(&matrizes);
 
