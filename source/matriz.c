@@ -159,3 +159,18 @@ void criar_resultado(Node *head) {
         printf("[ERRO] Não foi possível criar o arquivo final\n");
     }
 }
+
+void printar_resultado(Node *head) {
+    while (head->prox != NULL) {
+        head = head->prox;
+    }
+    for (int i = 0; i < head->N; i++) {
+        for (int j = 0; j < head->N; j++) {
+            if (j == head->N - 1) {
+                    printf("%.1f\n", head->matriz[i][j]);
+            } else {
+                printf("%.1f ", head->matriz[i][j]);
+            }
+        }
+    }
+}

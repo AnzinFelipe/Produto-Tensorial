@@ -28,7 +28,7 @@ int main( int argc, char *argv[]) {
         fclose(fp);
     }
 
-    calcular_tensorial_threads();
+    calcular_tensorial_threads(matrizes);
     calcular_tensorial(matrizes);
     liberar_matrizes(&matrizes);
 

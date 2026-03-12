@@ -21,4 +21,6 @@ void calcular_tensorial(Node *head);
 
 void criar_resultado(Node *head);
 
+void printar_resultado(Node *head);
+
 #endif
