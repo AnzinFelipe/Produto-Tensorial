@@ -4,14 +4,17 @@ pasta_s = source
 
 FLAGS = -pthread -fopenmp
 
-tensor: main.o matriz.o threads.o
-	gcc $(FLAGS) $(pasta_o)/main.o $(pasta_o)/matriz.o $(pasta_o)/threads.o -o tensor -lm
+tensor: main.o matriz.o threads.o openMP.o
+	gcc $(FLAGS) $(pasta_o)/main.o $(pasta_o)/matriz.o $(pasta_o)/threads.o $(pasta_o)/openMP.o -o tensor -lm
 
-main.o: pasta $(pasta_s)/main.c $(pasta_s)/matriz.h
+main.o: pasta $(pasta_s)/main.c $(pasta_s)/matriz.h $(pasta_s)/openMP.h
 	gcc -c $(pasta_s)/main.c -o $(pasta_o)/main.o
 
 threads.o: pasta $(pasta_s)/threads.c $(pasta_s)/threads.h $(pasta_s)/matriz.h
 	gcc -c $(pasta_s)/threads.c -o $(pasta_o)/threads.o
+
+openMP.o: pasta $(pasta_s)/openMP.c $(pasta_s)/openMP.h $(pasta_s)/matriz.h
+	gcc -c $(pasta_s)/openMP.c -o $(pasta_o)/openMP.o
 
 matriz.o: pasta $(pasta_s)/matriz.c $(pasta_s)/matriz.h
 	gcc -c $(pasta_s)/matriz.c -o $(pasta_o)/matriz.o

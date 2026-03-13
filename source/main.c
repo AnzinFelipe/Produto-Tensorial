@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "matriz.h"
 #include "threads.h"
+#include "openMP.h"
 
 int main( int argc, char *argv[]) {
     int cont;
@@ -29,6 +30,7 @@ int main( int argc, char *argv[]) {
     }
 
     calcular_tensorial(matrizes);
+    calcular_tensorial_openmp(matrizes);
     calcular_tensorial_threads_por_linha(matrizes);
     calcular_tensorial_threads_metade(matrizes);
     liberar_matrizes(&matrizes);

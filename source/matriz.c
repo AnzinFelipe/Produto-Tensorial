@@ -86,7 +86,6 @@ void calcular_tensorial(Node *head) {
     double tempo;
     double inicio = omp_get_wtime();
 
-    int produto1 = 1;
     Node *aux = head;
     Node *tensoriais = NULL;
     head = head->prox;
@@ -129,12 +128,7 @@ void calcular_tensorial(Node *head) {
             t_aux ->prox = novo;
         }
         
-        if (produto1 == 1) {
-            aux = tensoriais;
-            produto1 = 0;
-        } else {
-            aux = aux->prox;
-        }
+        aux = novo;
 
         for (int i = 0; i < novo_N; i++) {
             free(tensorial[i]);
