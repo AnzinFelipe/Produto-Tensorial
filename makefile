@@ -2,7 +2,7 @@ pasta_o = objects
 
 pasta_s = source
 
-FLAGS = -pthread
+FLAGS = -pthread -fopenmp
 
 tensor: main.o matriz.o threads.o
 	gcc $(FLAGS) $(pasta_o)/main.o $(pasta_o)/matriz.o $(pasta_o)/threads.o -o tensor -lm
@@ -20,7 +20,7 @@ pasta:
 	mkdir -p $(pasta_o)
 
 test: tensor
-	./tensor matriz_test1.txt matriz_test2.txt
+	./tensor matriz_test1.txt matriz_test2.txt matriz_test3.txt
 
 clean:
 	rm -rf *$(pasta_o).o $(pasta_o) tensor

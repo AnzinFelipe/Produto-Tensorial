@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include <omp.h>
 
 void adicionar_matriz(Node **head, FILE *fp) {
     int i, j;
@@ -81,6 +82,10 @@ void verificar_numeros(Node *head, FILE *fp) {
 }
 
 void calcular_tensorial(Node *head) {
+
+    double tempo;
+    double inicio = omp_get_wtime();
+
     int produto1 = 1;
     Node *aux = head;
     Node *tensoriais = NULL;
@@ -88,7 +93,10 @@ void calcular_tensorial(Node *head) {
 
     while (head != NULL) {
         int novo_N = aux->N * head->N;
-        float tensorial[novo_N][novo_N ];
+        float **tensorial = (float **)malloc(novo_N * sizeof(float *));
+        for (int i = 0; i < novo_N; i++) {
+            tensorial[i] = (float *)malloc(novo_N * sizeof(float));
+        }
         for (int i = 0; i < aux->N; i++) {
             for (int j = 0; j < aux->N; j++) {
                 for (int k = 0; k < head->N; k++) {
@@ -128,8 +136,17 @@ void calcular_tensorial(Node *head) {
             aux = aux->prox;
         }
 
+        for (int i = 0; i < novo_N; i++) {
+            free(tensorial[i]);
+        }
+        free(tensorial);
+
         head = head->prox;
     }
+    double fim = omp_get_wtime();
+    tempo = fim - inicio;
+    printf("Tempo de execução com a implementação serial: %.6f segundos\n", tempo);
+
     criar_resultado(tensoriais);
     liberar_matrizes(&tensoriais);
 }

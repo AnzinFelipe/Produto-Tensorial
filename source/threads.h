@@ -5,14 +5,14 @@
 #include "matriz.h"
 
 struct Parametros {
-    int matriz2_N;
-    float matriz1_num;
-    int matriz1_i, matriz1_j;
+    int matriz1_N, matriz2_N;
+    int matriz1_i;
+    float **matriz1;
     float **matriz2;
     float **tensorial;
 }typedef Parametros;
 
-void *thread_quadrante(void *arg);
+void *thread_por_linha(void *arg);
 
 void calcular_tensorial_threads(Node *head);
 

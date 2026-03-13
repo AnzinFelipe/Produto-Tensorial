@@ -3,17 +3,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <omp.h>
 
 Node *tensorais = NULL;
 
-void *thread_quadrante(void *arg) {
+void *thread_por_linha(void *arg) {
     Parametros *p = (Parametros *)arg;
-    int N = p->matriz2_N;
-    int i = p->matriz1_i, j = p->matriz1_j;
+    int N2 = p->matriz2_N;
+    int N1 = p->matriz1_N;
+    int i = p->matriz1_i;
 
-    for (int k = 0; k < N; k++) {
-        for (int l = 0; l < N; l++) {
-            p->tensorial[k + N * i][l + N * j] = p->matriz1_num * p->matriz2[k][l];
+    for (int j = 0; j < N1; j++) {
+        for (int k = 0; k < N2; k++) {
+            for (int l = 0; l < N2; l++) {
+                p->tensorial[k + N2 * i][l + N2 * j] = p->matriz1[i][j] * p->matriz2[k][l];
+            }
         }
     }
     return NULL;
@@ -21,6 +25,9 @@ void *thread_quadrante(void *arg) {
 
 void calcular_tensorial_threads(Node *head) {
     
+    double tempo;
+    double inicio = omp_get_wtime();
+
     int produto1 = 1;
     Node *aux = head;
     head = head->prox;
@@ -33,26 +40,21 @@ void calcular_tensorial_threads(Node *head) {
             tensorial[i] = (float *)malloc(novo_N * sizeof(float));
         }
 
-        pthread_t tids[aux->N * aux->N];
-        Parametros *parametros = (Parametros *)malloc(aux->N * aux->N * sizeof(Parametros));
+        pthread_t tids[aux->N];
+        Parametros *parametros = (Parametros *)malloc(aux->N * sizeof(Parametros));
 
         for (int i = 0; i < aux->N; i++) {
-            for (int j = 0; j < aux->N; j++) {
-                int N = i * aux->N + j;
-                parametros[N].matriz2 = head->matriz;
-                parametros[N].tensorial = tensorial;
-                parametros[N].matriz1_num = aux->matriz[i][j];
-                parametros[N].matriz2_N = head->N;
-                parametros[N].matriz1_i = i;
-                parametros[N].matriz1_j = j;
-                pthread_create(&tids[N], NULL, thread_quadrante, &parametros[N]);
-            }
+            parametros[i].matriz2 = head->matriz;
+            parametros[i].tensorial = tensorial;
+            parametros[i].matriz1 = aux->matriz;
+            parametros[i].matriz1_N = aux->N;
+            parametros[i].matriz2_N = head->N;
+            parametros[i].matriz1_i = i;
+            pthread_create(&tids[i], NULL, thread_por_linha, &parametros[i]);
         }
 
         for (int i = 0; i < aux->N; i++) {
-            for (int j = 0; j < aux->N; j++) {
-                pthread_join(tids[i * aux->N + j], NULL);
-            }
+            pthread_join(tids[i], NULL);
         }
 
         Node *novo = (Node *)malloc(sizeof(Node));
@@ -87,6 +89,11 @@ void calcular_tensorial_threads(Node *head) {
 
         head = head->prox;
     }
-    printar_resultado(tensoriais);
+
+    double fim = omp_get_wtime();
+    tempo = fim - inicio;
+    printf("Tempo de execução com a primeira implementação usando Pthreads: %.6f segundos\n", tempo);
+
+    //printar_resultado(tensoriais);
     liberar_matrizes(&tensoriais);
 }
