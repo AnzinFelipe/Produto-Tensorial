@@ -14,6 +14,10 @@ struct Parametros {
 
 void *thread_por_linha(void *arg);
 
-void calcular_tensorial_threads(Node *head);
+void *thread_metade(void *arg);
+
+void calcular_tensorial_threads_por_linha(Node *head);
+
+void calcular_tensorial_threads_metade(Node *head);
 
 #endif

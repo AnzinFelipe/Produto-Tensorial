@@ -28,8 +28,9 @@ int main( int argc, char *argv[]) {
         fclose(fp);
     }
 
-    calcular_tensorial_threads(matrizes);
     calcular_tensorial(matrizes);
+    calcular_tensorial_threads_por_linha(matrizes);
+    calcular_tensorial_threads_metade(matrizes);
     liberar_matrizes(&matrizes);
 
     return 0;
